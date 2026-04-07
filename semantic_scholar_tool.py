@@ -27,17 +27,24 @@ class Tools:
 
     def search_bulk_papers(self,
                     topic: str = "",
-                    sort: str = "citationCount",
+                    sort: str = "citationCount:desc",
                     year: str = "2023-",
                     fields: str = "title,year,abstract,citationCount",
-                    fieldsOfStudy:str = "Computer Science,Environmental Science") -> str:
+                    fieldsOfStudy:str = "Computer Science,Environmental Science",
+                    publicationTypes:str = "JournalArticle,Conference,Review",
+                    minCitationCount:int = 10) -> str:
+        """
+        Find bulk papers related to a given topic.
+        """
         params = {
             "query": topic,
             "sort": sort,  # Optional: Sort by relevance, citationCount, influentialCitationCount, etc.
             "fields": fields,  # Optional: Specify the fields you want in the response
             "year": year,
             "sort": sort,
-            "fieldsOfStudy": fieldsOfStudy
+            "fieldsOfStudy": fieldsOfStudy,
+            "publicationTypes": publicationTypes,
+            "minCitationCount": minCitationCount
         }
         response = requests.get(self.base_url+"/bulk",headers=self.headers,params=params) 
         results = response.json()
@@ -60,7 +67,7 @@ class Tools:
     def find_papers(self, 
                     topic: str = "",
                     result_limit: int = 10,
-                    sort: str = "citationCount",
+                    sort: str = "citationCount:desc",
                     fieldsOfStudy:str = "Computer Science,Environmental Science") -> str:
         """
         Find a limited number of papers related to a given topic.
