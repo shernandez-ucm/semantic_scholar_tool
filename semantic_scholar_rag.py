@@ -3,7 +3,6 @@ from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.documents import Document
 from uuid import uuid4
-
 import tqdm
 
 class ResearchPaperSearch:
@@ -16,7 +15,7 @@ class ResearchPaperSearch:
     def ingest_jsonl(self, file_path):
         """Loads JSONL, creates LangChain documents, and builds the vector store."""
         documents = []
-        
+        ids=set()
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
                 data = json.loads(line)
@@ -33,7 +32,9 @@ class ResearchPaperSearch:
                     "authors": ", ".join([a['name'] for a in data.get("authors", [])])
                 }
                 document=Document(page_content=page_content, metadata=metadata)
-                documents.append(document)
+                if data.get("paperId") not in ids:
+                    documents.append(document)
+                    ids.add(data.get("paperId"))
 
         print(f"Ingesting {len(documents)} papers into the vector store...")
         
@@ -43,8 +44,9 @@ class ResearchPaperSearch:
             embedding_function=self.embeddings,
             persist_directory=self.persist_directory,
         )
-        uuids = [str(uuid4()) for _ in range(len(documents))]
-        batch_size = 500
+
+        batch_size = 1000
+        uuids=[str(uuid4()) for _ in range(len(documents))]
         for i in tqdm.tqdm(range(0, len(documents), batch_size)):
             batch = documents[i : i + batch_size]
             batch_uuids = uuids[i : i + batch_size]
