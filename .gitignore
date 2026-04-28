@@ -182,3 +182,5 @@ cython_debug/
 
 *.jsonl
 *.bib
+env/
+chroma_db/
