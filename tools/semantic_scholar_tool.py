@@ -17,11 +17,12 @@ import json
 from dotenv import load_dotenv
 
 class Tools:
-    def __init__(self):
+    def __init__(self,persist_file: str = f"papers.jsonl"):
         load_dotenv()  # Load environment variables from .env file
         self.api_key = os.getenv("SEMANTIC_SCHOLAR_API_KEY")
         self.base_url = "https://api.semanticscholar.org/graph/v1/paper/search"
         self.headers = {'X-API-KEY': self.api_key}
+        self.persist_file = persist_file  # File to store retrieved papers
 
     # Add your custom tools using pure Python code here, make sure to add type hints and descriptions
 
@@ -50,7 +51,7 @@ class Tools:
         results = response.json()
         #print(f"Will retrieve an estimated {results['total']} documents")
         retrieved = 0
-        with open(f"papers.jsonl", "a") as file:
+        with open(self.persist_file, "a") as file:
             while True:
                 if "data" in results:
                     retrieved += len(results["data"])
