@@ -9,9 +9,9 @@ from typing import List, Dict, Any
 from datetime import datetime
 
 class ResearchPaperSearch:
-    def __init__(self, model_name="nomic-embed-text:latest", persist_directory="./chroma_db",batch_size=1000, llm_model="mistral:latest" ):
+    def __init__(self, embedding_model="nomic-embed-text:latest", persist_directory="./chroma_db",batch_size=1000, llm_model="mistral:latest" ):
         # Initialize Ollama embeddings
-        self.embeddings = OllamaEmbeddings(model=model_name,
+        self.embeddings = OllamaEmbeddings(model=embedding_model,
                                            num_ctx=8182)
         self.llm = OllamaLLM(model=llm_model, temperature=0.0)
         self.persist_directory = persist_directory

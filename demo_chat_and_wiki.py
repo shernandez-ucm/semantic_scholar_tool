@@ -39,11 +39,11 @@ def main():
     #search_tool.search_bulk_papers(topic="(causal inference) + education",fieldsOfStudy="")
     # Initialize the search engine
     search_engine = ResearchPaperSearch(
-        model_name="nomic-embed-text:latest",
+        embedding_model="qwen3-embedding:0.6b",
         persist_directory="./chroma_db",
         llm_model="gemma4:latest"  # You can use other models like "neural-chat", "llama2", etc.
     )
-    #search_engine.ingest_jsonl("papers.jsonl")
+    search_engine.ingest_jsonl("papers.jsonl")
     # ============================================
     # EXAMPLE 1: Basic Search and Chat
     # ============================================
